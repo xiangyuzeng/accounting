@@ -262,8 +262,19 @@ def process_grubhub(uploaded_file):
 # 🖥️ STREAMLIT UI
 # ==========================================
 
-st.markdown(f"<h1 style='color:{luckin_blue};'>☕ luckin coffee</h1>", unsafe_allow_html=True)
-st.markdown("## 财务对账自动化平台 v4.0")
+# Logo loading - use relative path for Streamlit Cloud deployment
+import os
+logo_path = os.path.join(os.path.dirname(__file__), "logo.png")
+if os.path.exists(logo_path):
+    col_logo, col_title = st.columns([1, 4])
+    with col_logo:
+        st.image(logo_path, width=120)
+    with col_title:
+        st.markdown(f"<h1 style='color:{luckin_blue}; margin-top: 20px;'>luckin coffee</h1>", unsafe_allow_html=True)
+        st.markdown("## 财务对账自动化平台 v4.0")
+else:
+    st.markdown(f"<h1 style='color:{luckin_blue};'>☕ luckin coffee</h1>", unsafe_allow_html=True)
+    st.markdown("## 财务对账自动化平台 v4.0")
 st.markdown("### 费用明细分析 (Fee Breakdown Analysis)")
 st.markdown("---")
 
@@ -325,7 +336,7 @@ if st.button("🚀 开始自动化对账处理", type="primary"):
             st.error("❌ Grubhub 文件格式错误")
     my_bar.progress(90)
     
-    if not any(results.values()):
+    if all(v is None for v in results.values()):
         st.warning("⚠️ 请至少上传一个有效的 CSV 文件。")
         my_bar.empty()
     else:
